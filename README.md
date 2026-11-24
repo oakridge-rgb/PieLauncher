@@ -56,6 +56,18 @@ Tap and hold to open the pie menu. Then swipe to choose an app to start.
 
 ![How to use pie menu](svg/guide_pie_menu.svg)
 
+### Pie Edition
+
+This fork adds three visual aids to the pie menu, all optional and on by
+default in Settings → Home:
+
+* The icon the pie menu would launch on release is highlighted with a
+  translucent halo that glides along as you swipe.
+* The name of that app is shown above the pie menu, so you can confirm
+  your choice without depending on the icon alone.
+* A faint ring marks the radius of the pie menu, making its radial
+  structure visible.
+
 ### How to open the app list
 
 Tap once to open the list. Then type the name of an app you want to start.

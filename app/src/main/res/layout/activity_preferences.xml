@@ -73,6 +73,18 @@
 					android:text="@string/animate_in_out_yes" />
 				<de.markusfisch.android.pielauncher.widget.PreferenceView
 					style="@style/PreferenceWithSeparator"
+					android:id="@+id/highlight_selected_icon"
+					android:text="@string/highlight_selected_icon_yes" />
+				<de.markusfisch.android.pielauncher.widget.PreferenceView
+					style="@style/PreferenceWithSeparator"
+					android:id="@+id/show_pie_app_name"
+					android:text="@string/show_pie_app_name_yes" />
+				<de.markusfisch.android.pielauncher.widget.PreferenceView
+					style="@style/PreferenceWithSeparator"
+					android:id="@+id/show_pie_ring"
+					android:text="@string/show_pie_ring_yes" />
+				<de.markusfisch.android.pielauncher.widget.PreferenceView
+					style="@style/PreferenceWithSeparator"
 					android:id="@+id/split_pie_menu"
 					android:text="@string/split_pie_menu" />
 				<de.markusfisch.android.pielauncher.widget.PreferenceView

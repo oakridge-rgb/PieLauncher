@@ -1,5 +1,10 @@
 # Change Log
 
+## 1.30.0
+* Add an option to highlight the icon the pie menu would launch
+* Add an option to show the name of the selected app above the pie
+* Add an option to draw a faint ring at the pie radius
+
 ## 1.29.0
 * Add an option to show app shortcuts in search
 * Add an option to learn from search selections

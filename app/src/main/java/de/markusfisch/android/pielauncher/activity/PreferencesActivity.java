@@ -230,6 +230,21 @@ public class PreferencesActivity extends Activity {
 				PreferencesActivity::getAnimateInOutOptions,
 				() -> prefs.animateInOut(),
 				(value) -> prefs.setAnimateInOut(value));
+		initPreference(R.id.highlight_selected_icon,
+				R.string.highlight_selected_icon,
+				PreferencesActivity::getHighlightSelectedIconOptions,
+				() -> prefs.highlightSelectedIcon(),
+				(value) -> prefs.setHighlightSelectedIcon(value));
+		initPreference(R.id.show_pie_app_name,
+				R.string.show_pie_app_name,
+				PreferencesActivity::getShowPieAppNameOptions,
+				() -> prefs.showPieAppName(),
+				(value) -> prefs.setShowPieAppName(value));
+		initPreference(R.id.show_pie_ring,
+				R.string.show_pie_ring,
+				PreferencesActivity::getShowPieRingOptions,
+				() -> prefs.showPieRing(),
+				(value) -> prefs.setShowPieRing(value));
 		initPreference(R.id.split_pie_menu,
 				R.string.split_pie_menu,
 				PreferencesActivity::getAlternateMenuOptions,
@@ -552,6 +567,27 @@ public class PreferencesActivity extends Activity {
 		Map<Boolean, Integer> map = new LinkedHashMap<>();
 		map.put(Boolean.TRUE, R.string.animate_in_out_yes);
 		map.put(Boolean.FALSE, R.string.animate_in_out_no);
+		return map;
+	}
+
+	private static Map<Boolean, Integer> getHighlightSelectedIconOptions() {
+		Map<Boolean, Integer> map = new LinkedHashMap<>();
+		map.put(Boolean.TRUE, R.string.highlight_selected_icon_yes);
+		map.put(Boolean.FALSE, R.string.highlight_selected_icon_no);
+		return map;
+	}
+
+	private static Map<Boolean, Integer> getShowPieAppNameOptions() {
+		Map<Boolean, Integer> map = new LinkedHashMap<>();
+		map.put(Boolean.TRUE, R.string.show_pie_app_name_yes);
+		map.put(Boolean.FALSE, R.string.show_pie_app_name_no);
+		return map;
+	}
+
+	private static Map<Boolean, Integer> getShowPieRingOptions() {
+		Map<Boolean, Integer> map = new LinkedHashMap<>();
+		map.put(Boolean.TRUE, R.string.show_pie_ring_yes);
+		map.put(Boolean.FALSE, R.string.show_pie_ring_no);
 		return map;
 	}
 

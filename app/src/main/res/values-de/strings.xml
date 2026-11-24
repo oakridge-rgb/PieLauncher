@@ -102,6 +102,15 @@
 	<string name="alternate_menu_secondary">Sekundäres Menü</string>
 	<string name="alternate_menu_all_apps">Alle Apps</string>
 	<string name="alternate_menu_last_used">Zuletzt verwendete Apps</string>
+	<string name="highlight_selected_icon">Ausgewähltes Symbol hervorheben</string>
+	<string name="highlight_selected_icon_yes">Ja (Standard)</string>
+	<string name="highlight_selected_icon_no">Nein</string>
+	<string name="show_pie_app_name">Namen der ausgewählten App anzeigen</string>
+	<string name="show_pie_app_name_yes">Ja (Standard)</string>
+	<string name="show_pie_app_name_no">Nein</string>
+	<string name="show_pie_ring">Kreis um das Pie-Menü anzeigen</string>
+	<string name="show_pie_ring_yes">Ja (Standard)</string>
+	<string name="show_pie_ring_no">Nein</string>
 	<string name="icon_press">Langes Drücken</string>
 	<string name="icon_press_default">Fügt App zum Menu hinzu (Standard)</string>
 	<string name="icon_press_longer">Erfordert längeres Drücken</string>

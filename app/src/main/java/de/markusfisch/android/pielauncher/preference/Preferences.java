@@ -95,6 +95,9 @@ public class Preferences {
 	private static final String SPLIT_PIE_MENU = "split_pie_menu";
 	private static final String ADDITIONAL_TOUCH_MENU = "additional_touch_menu";
 	private static final String CIRCLE_SWAPS_MENUS = "circle_swaps";
+	private static final String HIGHLIGHT_SELECTED_ICON = "highlight_selected_icon";
+	private static final String SHOW_PIE_APP_NAME = "show_pie_app_name";
+	private static final String SHOW_PIE_RING = "show_pie_ring";
 
 	private final SharedPreferences preferences;
 	private final SystemSettings systemSettings;
@@ -133,6 +136,9 @@ public class Preferences {
 	private int splitPieMenu = ALTERNATE_MENU_NONE;
 	private int additionalTouchMenu = ALTERNATE_MENU_NONE;
 	private int circleSwapsMenus = ALTERNATE_MENU_NONE;
+	private boolean highlightSelectedIcon = true;
+	private boolean showPieAppName = true;
+	private boolean showPieRing = true;
 
 	public Preferences(Context context) {
 		Context appContext = context.getApplicationContext();
@@ -201,6 +207,11 @@ public class Preferences {
 				additionalTouchMenu);
 		circleSwapsMenus = preferences.getInt(CIRCLE_SWAPS_MENUS,
 				circleSwapsMenus);
+		highlightSelectedIcon = preferences.getBoolean(
+				HIGHLIGHT_SELECTED_ICON, highlightSelectedIcon);
+		showPieAppName = preferences.getBoolean(SHOW_PIE_APP_NAME,
+				showPieAppName);
+		showPieRing = preferences.getBoolean(SHOW_PIE_RING, showPieRing);
 	}
 
 	public boolean skipSetup() {
@@ -507,6 +518,33 @@ public class Preferences {
 	public void setCircleSwapsMenus(int circleSwapsMenus) {
 		this.circleSwapsMenus = circleSwapsMenus;
 		put(CIRCLE_SWAPS_MENUS, circleSwapsMenus).apply();
+	}
+
+	public boolean highlightSelectedIcon() {
+		return highlightSelectedIcon;
+	}
+
+	public void setHighlightSelectedIcon(boolean highlightSelectedIcon) {
+		this.highlightSelectedIcon = highlightSelectedIcon;
+		put(HIGHLIGHT_SELECTED_ICON, highlightSelectedIcon).apply();
+	}
+
+	public boolean showPieAppName() {
+		return showPieAppName;
+	}
+
+	public void setShowPieAppName(boolean showPieAppName) {
+		this.showPieAppName = showPieAppName;
+		put(SHOW_PIE_APP_NAME, showPieAppName).apply();
+	}
+
+	public boolean showPieRing() {
+		return showPieRing;
+	}
+
+	public void setShowPieRing(boolean showPieRing) {
+		this.showPieRing = showPieRing;
+		put(SHOW_PIE_RING, showPieRing).apply();
 	}
 
 	public float getAnimationDuration() {

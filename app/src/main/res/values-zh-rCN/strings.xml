@@ -102,6 +102,15 @@
 	<string name="alternate_menu_secondary">次级菜单</string>
 	<string name="alternate_menu_all_apps">所有应用</string>
 	<string name="alternate_menu_last_used">最近使用的应用</string>
+	<string name="highlight_selected_icon">高亮选中的图标</string>
+	<string name="highlight_selected_icon_yes">是（默认）</string>
+	<string name="highlight_selected_icon_no">否</string>
+	<string name="show_pie_app_name">显示选中的应用名称</string>
+	<string name="show_pie_app_name_yes">是（默认）</string>
+	<string name="show_pie_app_name_no">否</string>
+	<string name="show_pie_ring">显示饼状菜单圆环</string>
+	<string name="show_pie_ring_yes">是（默认）</string>
+	<string name="show_pie_ring_no">否</string>
 	<string name="icon_press">长按</string>
 	<string name="icon_press_default">在菜单中添加应用程序 (默认)</string>
 	<string name="icon_press_longer">需要长时间按压</string>

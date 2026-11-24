@@ -99,6 +99,8 @@ public class AppPieView extends View {
 	private final Paint paintList = new Paint(Paint.FILTER_BITMAP_FLAG);
 	private final Paint paintDropZone = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private final Paint paintPressed = new Paint(Paint.ANTI_ALIAS_FLAG);
+	private final Paint paintHalo = new Paint(Paint.ANTI_ALIAS_FLAG);
+	private final Paint paintRing = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private final Paint paintAction = new Paint(Paint.FILTER_BITMAP_FLAG);
 	private final Paint paintAppShortcuts = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private final Paint paintAppShortcutsThumb =
@@ -151,6 +153,8 @@ public class AppPieView extends View {
 	private final int translucentBackgroundColor;
 	private final int alphaDropZone;
 	private final int alphaPressed;
+	private final int alphaHalo;
+	private final int alphaRing;
 	private final int alphaText;
 	private final int minFlingVelocity;
 	private final int maxFlingVelocity;
@@ -202,6 +206,10 @@ public class AppPieView extends View {
 	private Apps.AppIcon touchedIcon;
 	private Apps.AppIcon highlightedIcon;
 	private Apps.AppIcon launchingIcon;
+	private Apps.AppIcon pieSelectedApp;
+	private float haloX;
+	private float haloY;
+	private float haloSize;
 	private long highlightedFrom;
 	private long grabbedIconAt;
 	private long lastTapUpTime;
@@ -262,6 +270,16 @@ public class AppPieView extends View {
 		paintPressed.setColor(res.getColor(R.color.bg_action_pressed));
 		paintPressed.setStyle(Paint.Style.FILL);
 		alphaPressed = paintPressed.getAlpha();
+
+		paintHalo.setColor(res.getColor(R.color.bg_action_pressed));
+		paintHalo.setStyle(Paint.Style.FILL);
+		alphaHalo = paintHalo.getAlpha();
+
+		// Faint white ring at the pie radius.
+		paintRing.setColor(0x1affffff);
+		paintRing.setStyle(Paint.Style.STROKE);
+		paintRing.setStrokeWidth(Math.max(1f, 2f * dp));
+		alphaRing = paintRing.getAlpha();
 
 		paintText.setColor(res.getColor(R.color.text_color));
 		alphaText = paintText.getAlpha();
@@ -526,6 +544,10 @@ public class AppPieView extends View {
 		currentPieBlur = applyBlurOut(pieRenderNode, currentPieBlur, fPie);
 		boolean invalidate = drawPieMenu(pieCanvas, fPie, now, ad);
 		drawRenderNode(pieRenderNode, canvas);
+
+		// Draw the name of the app the pie would launch; the
+		// loading tip shares the same position.
+		drawPieAppName(canvas, fPie);
 
 		if (PieLauncherApp.apps.isIndexing()) {
 			drawTip(canvas, loadingTip);
@@ -2367,6 +2389,9 @@ public class AppPieView extends View {
 	private boolean drawPieMenu(Canvas canvas, float f, long now, float ad) {
 		if (f <= 0) {
 			outgoingPieIcons.clear();
+			pieSelectedApp = null;
+			// Snap the halo to its icon when the pie appears again.
+			haloSize = 0;
 			return false;
 		}
 
@@ -2376,17 +2401,26 @@ public class AppPieView extends View {
 				animateInOut ? f : 1f,
 				launchingIcon);
 
+		int selectedIcon = pieMenu.getSelectedIcon();
+		Apps.AppIcon selectedApp = selectedIcon > -1 &&
+				selectedIcon < pieMenu.icons.size()
+						? pieMenu.icons.get(selectedIcon) : null;
+
 		boolean switching = !outgoingPieIcons.isEmpty() && animateInOut && ad > 0;
 		float t = switching ? Math.max(0f, (now - lastCircleAt) / ad) : 1f;
 		if (t < 1f) {
+			// There is no steady selection while switching menus.
+			pieSelectedApp = null;
 			drawCircleTransition(canvas, t, f);
 		} else {
 			outgoingPieIcons.clear();
+			pieSelectedApp = selectedApp;
+			drawPieRing(canvas, f);
+			drawSelectionHalo(canvas, selectedApp, f);
 			CanvasPieMenu.paint.setAlpha(Math.round(f * 255f));
 			pieMenu.draw(canvas);
 		}
 
-		int selectedIcon = pieMenu.getSelectedIcon();
 		if (selectedIcon != lastSelectedIcon) {
 			lastSelectedIcon = selectedIcon;
 			performHapticFeedbackIfAllowed(HAPTIC_FEEDBACK_CHOICE);
@@ -2420,6 +2454,65 @@ public class AppPieView extends View {
 		CanvasPieMenu.paint.setAlpha(Math.round(f * progress * 255f));
 		pieMenu.draw(canvas);
 		canvas.restore();
+	}
+
+	// Draw a faint circle at the pie radius to make the radial
+	// arrangement of the menu visible.
+	private void drawPieRing(Canvas canvas, float f) {
+		if (!prefs.showPieRing() || pieMenu.icons.isEmpty()) {
+			return;
+		}
+		double rad = pieMenu.getDrawRadius();
+		if (rad <= 0) {
+			return;
+		}
+		paintRing.setAlpha(Math.round(f * alphaRing));
+		canvas.drawCircle(pieMenu.getCenterX(), pieMenu.getCenterY(),
+				(float) rad, paintRing);
+	}
+
+	// Draw a translucent halo that glides behind the selected icon.
+	private void drawSelectionHalo(
+			Canvas canvas,
+			Apps.AppIcon icon,
+			float f) {
+		if (!prefs.highlightSelectedIcon() || icon == null) {
+			return;
+		}
+		if (haloSize < 1f) {
+			// Snap to the icon when the pie appears.
+			haloX = icon.x;
+			haloY = icon.y;
+			haloSize = (float) icon.size;
+		} else {
+			// Exponential smoothing; frames are driven by
+			// touch movement or animation.
+			haloX += (icon.x - haloX) * .5f;
+			haloY += (icon.y - haloY) * .5f;
+			haloSize += (icon.size - haloSize) * .5f;
+		}
+		paintHalo.setAlpha(Math.round(f * alphaHalo));
+		canvas.drawCircle(haloX, haloY, haloSize * .6f, paintHalo);
+	}
+
+	// Show the name of the app the pie would launch on release.
+	private void drawPieAppName(Canvas canvas, float f) {
+		if (mode != MODE_PIE || f <= 0 || !prefs.showPieAppName() ||
+				pieSelectedApp == null ||
+				PieLauncherApp.apps.isIndexing()) {
+			return;
+		}
+		String label = pieSelectedApp.label;
+		if (label == null || label.length() < 1) {
+			return;
+		}
+		CharSequence name = TextUtils.ellipsize(
+				label, paintText,
+				viewWidth - (listPadding << 1),
+				TextUtils.TruncateAt.END);
+		paintText.setAlpha(Math.round(f * alphaText));
+		canvas.drawText(name, 0, name.length(),
+				viewWidth >> 1, controlsPadding + textOffset, paintText);
 	}
 
 	private String getTip(boolean hasIcon) {

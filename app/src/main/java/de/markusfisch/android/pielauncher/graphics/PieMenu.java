@@ -29,6 +29,7 @@ public class PieMenu<T extends PieMenu.Icon> {
 	private int centerY = -1;
 	private double radius = 0;
 	private double twist = 0;
+	private double drawRadius = 0;
 	private float iconScale = 1f;
 
 	public static double getPositiveAngle(double a) {
@@ -57,6 +58,12 @@ public class PieMenu<T extends PieMenu.Icon> {
 
 	public int getCenterY() {
 		return centerY;
+	}
+
+	// Get the effective radius used for the last calculation; includes
+	// the scaling while fading in or out.
+	public double getDrawRadius() {
+		return drawRadius;
 	}
 
 	public void addScrollShift(int scrollY) {
@@ -112,6 +119,7 @@ public class PieMenu<T extends PieMenu.Icon> {
 		int closestIcon = 0;
 		boolean cursorNearCenter = false;
 		double rad = radius + (1f - t) * radius * .25f;
+		drawRadius = rad;
 		double circumference = Math.PI * rad * 2f;
 		double pixelsPerRadian = TAU / circumference;
 		double centeredY = y - centerY;

@@ -2,6 +2,11 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:installLocation="auto">
+	<!-- AndroidIDE injects its logsender library, which declares
+		minSdkVersion 16, into debug builds. Keep the project's own
+		minSdk of 9 and let the manifest merger accept the injected
+		library; the library is unused outside debug builds from the IDE. -->
+	<uses-sdk tools:overrideLibrary="com.itsaky.androidide.logsender"/>
 	<supports-screens
 		android:largeScreens="true"
 		android:xlargeScreens="true"/>
